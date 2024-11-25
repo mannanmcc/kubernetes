@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order
+data:
+  ENVIRONMENT: "production"
+  STOCK_API_HOST_NAME: "stock"
+  STOCK_API_HOST_PORT: "50051"

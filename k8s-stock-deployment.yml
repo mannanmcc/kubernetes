@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment                 # Type of Kubernetes resource
+metadata:
+  name: stock           # Name of the Kubernetes resource
+spec:
+  replicas: 1                    # Number of pods to run at any given time
+  selector:
+    matchLabels:
+      app: stock        # This deployment applies to any Pods matching the specified label
+  template:                      # This deployment will create a set of pods using the configurations in this template
+    metadata:
+      labels:                    # The labels that will be applied to all of the pods in this deployment
+        app: stock 
+    spec:                        # Spec for the container which will run in the Pod
+      containers:
+      - name: stock
+        image: mannanmcc/stock:1.0.1
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: stock
+            containerPort: 50051  # Should match the port number that the Go application listens on
+
+---
+apiVersion: v1
+kind: Service                    # Type of kubernetes resource
+metadata:
+  name: stock   # Name of the resource
+spec:
+  ports:                         # Take incoming HTTP requests on port 9090 and forward them to the targetPort of 8080
+    - name: grpc
+      port: 50051
+      targetPort: stock
+  selector:
+    app: stock         # Map any pod with label `app=go-hello-world` to this service
