@@ -14,7 +14,7 @@ spec:
         app: order
     spec:                        # Spec for the container which will run in the Pod
       containers:
-      - name: stock
+      - name: order
         image: mannanmcc/order:1.0.2
         imagePullPolicy: IfNotPresent
         ports:
@@ -24,6 +24,13 @@ spec:
         envFrom:
           - configMapRef:
               name: order
+        resources:
+          limits:
+            cpu: 50m
+            memory: 64Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
 
 ---
 apiVersion: v1
@@ -31,10 +38,10 @@ kind: Service                    # Type of kubernetes resource
 metadata:
   name: order-service   # Name of the resource
 spec:
-  type: NodePort                 # A port is opened on each node in your cluster via Kube proxy.
-  ports:                         # Take incoming HTTP requests on port 9090 and forward them to the targetPort of 8080
+  type: LoadBalancer
+  ports:                         # Take incoming HTTP requests on port 5052 and forward them to the targetPort of 50051
     - name: grpc
-      port: 50051
-      targetPort: order-service
+      port: 50052 # port which this loadbalancer is listen to
+      targetPort: 50051 #port which application listen to
   selector:
     app: order         # Map any pod with label `app=go-hello-world` to this service

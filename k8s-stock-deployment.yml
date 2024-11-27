@@ -19,17 +19,11 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
           - name: stock
-            containerPort: 50051  # Should match the port number that the Go application listens on
-
----
-apiVersion: v1
-kind: Service                    # Type of kubernetes resource
-metadata:
-  name: stock   # Name of the resource
-spec:
-  ports:                         # Take incoming HTTP requests on port 9090 and forward them to the targetPort of 8080
-    - name: grpc
-      port: 50051
-      targetPort: stock
-  selector:
-    app: stock         # Map any pod with label `app=go-hello-world` to this service
+            containerPort: 50051
+        resources:
+          limits:
+            cpu: 50m
+            memory: 124Mi
+          requests:
+            cpu: 50m
+            memory: 124Mi
